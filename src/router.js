@@ -13,11 +13,6 @@ export default new Router({
       component: () => import("@/views/Index.vue") //logo
     },
     {
-      path: "/home",
-      name: "home",
-      component: () => import("@/views/Home.vue") //app首页
-    },
-    {
       path: "/login",
       name: "login",
       component: () => import("@/views/Login.vue") //app登录页面
@@ -60,7 +55,57 @@ export default new Router({
     {
       path: "/addproduct",
       name: "addproduct",
-      component: () => import("@/views/Addproduct.vue") //我的店铺
+      component: () => import("@/views/Addproduct.vue") //添加商品
+    },
+    {
+      path: "/productlist",
+      name: "productlist",
+      component: () => import("@/views/Productlist.vue") //商品列表
+    },
+    {
+      path: "/productdetail",
+      name: "productdetail",
+      component: () => import("@/views/Productdetail.vue") //商品详情页面
+    },
+    {
+      path: "/addplatformpro",
+      name: "addplatformpro",
+      component: () => import("@/views/Addplatformpro.vue") //添加平台商品
+    },
+    {
+      path: "/applylist",
+      name: "applylist",
+      component: () => import("@/views/Applylist.vue") //申请列表
+    },
+    {
+      path: "/allproduct",
+      name: "allproduct",
+      component: () => import("@/views/Allproduct.vue") //所有商品列表
+    },
+    {
+      path: "/byuserindex",
+      name: "byuserindex",
+      component: () => import("@/views/byuser/Index.vue") //用户端首页
+    },
+    {
+      path: "/byuserhome",
+      name: "byuserhome",
+      component: () => import("@/views/byuser/Home.vue") //app所有店铺列表
+    },
+    {
+      path: "/byuserlogin",
+      name: "byuserlogin",
+      component: () => import("@/views/byuser/Login.vue") //app登录页面
+    },
+    {
+      path: "/byuserregister",
+      name: "byuserregister",
+      component: () => import("@/views/byuser/Register.vue") //app注册页面
+    },
+    {
+      path: "/byuserstoreindex",
+      name: "byuserstoreindex",
+      component: () => import("@/views/byuser/Storeindex.vue") //app店铺
     }
   ]
 });

@@ -2,7 +2,7 @@
  * @Author: mikey.zhang  店铺首页
  * @Date: 2019-04-12 13:27:54 
  * @Last Modified by: mikey.zhang
- * @Last Modified time: 2019-04-15 09:49:21
+ * @Last Modified time: 2019-04-20 10:52:49
  */
 
 <template>
@@ -30,15 +30,13 @@
       <li v-on:click="gostoresetting">
         <img src="../assets/images/pic4.png" alt="店铺设置">
       </li>
-      <li>
+      <li v-on:click="goclassifylist">
         <img src="../assets/images/pic5.png" alt="分类管理">
       </li>
-      <li>
-        <router-link to="/addproduct">
-          <img src="../assets/images/pic6.png" alt="添加商品">
-        </router-link>
+      <li v-on:click="goaddproduct">
+        <img src="../assets/images/pic6.png" alt="添加商品">
       </li>
-      <li>
+      <li v-on:click="goproductlist">
         <img src="../assets/images/pic7.png" alt="商品列表">
       </li>
       <li>
@@ -47,6 +45,11 @@
       <li class="mystore">
         <router-link to="/mystore">
           <p>我的店铺</p>
+        </router-link>
+      </li>
+      <li class="mystore">
+        <router-link to="/allproduct">
+          <p>查看所有商品</p>
         </router-link>
       </li>
     </ul>
@@ -62,6 +65,7 @@
   </div>
 </template>
 <script>
+import formData from "../utils/formdata";
 export default {
   name: "storelist",
   data() {
@@ -94,6 +98,17 @@ export default {
     },
     gostoresetting() {
       this.$router.push(`/storesetting${this.search}`);
+    },
+    goclassifylist() {
+      this.$router.push(
+        `/classifylist?storeid=${formData(this.search)["storeid"]}`
+      );
+    },
+    goaddproduct() {
+      this.$router.push(`/addproduct${this.search}`);
+    },
+    goproductlist() {
+      this.$router.push(`/productlist${this.search}`);
     }
   }
 };

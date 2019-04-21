@@ -1,28 +1,32 @@
 <template>
-    <div class="mystore">
-        <header>我的店铺</header>
-        <section>
-            <dl v-for="(i,k) in storelist" v-bind:key="i.store_id">
-                <dt>
-                    <img
-                        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555239268391&di=845b5d67c7c125167e0b2211ae6a9741&imgtype=0&src=http%3A%2F%2Fpic2.to8to.com%2Fcase%2Fday_130407%2F20130407_5fda81c9373b987ab994WM29Vll1BwFJ_sp.jpg"
-                        alt=""
-                    >
-                </dt>
-                <dd>
-                    <p>{{i.store_name}}</p>
-                    <p>
-                        店铺类型:
-                        <span>{{i.catagory}}</span>
-                    </p>
-                    <p>
-                        店铺专卖:
-                        <span v-for="(item,v) in i.sub_catagory" v-bind:key="v">{{item}}</span>
-                    </p>
-                </dd>
-            </dl>
-        </section>
-    </div>
+  <div class="mystore">
+    <header>我的店铺</header>
+    <section>
+      <dl
+        v-for="(i,k) in storelist"
+        v-bind:key="i.store_id"
+        v-on:click="gostoreindex(i.store_id,i.store_name)"
+      >
+        <dt>
+          <img
+            src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555239268391&di=845b5d67c7c125167e0b2211ae6a9741&imgtype=0&src=http%3A%2F%2Fpic2.to8to.com%2Fcase%2Fday_130407%2F20130407_5fda81c9373b987ab994WM29Vll1BwFJ_sp.jpg"
+            alt=""
+          >
+        </dt>
+        <dd>
+          <p>{{i.store_name}}</p>
+          <p>
+            店铺类型:
+            <span>{{i.catagory}}</span>
+          </p>
+          <p>
+            店铺专卖:
+            <span v-for="(item,v) in i.sub_catagory" v-bind:key="v">{{item}}</span>
+          </p>
+        </dd>
+      </dl>
+    </section>
+  </div>
 </template>
 <script>
 export default {
@@ -32,11 +36,11 @@ export default {
       storelist: []
     };
   },
-  mounted() {
+  created() {
     this.$http
       .get("/store/ustorelist")
       .then(data => {
-        console.log(data);
+        // console.log(data);
         if (data.code === 1) {
           this.storelist = data.result;
         }
@@ -44,6 +48,13 @@ export default {
       .catch(err => {
         console.log(err);
       });
+  },
+  methods: {
+    gostoreindex(storeid, storename) {
+      this.$router.push(
+        `/storeindex?storeid=${storeid}&storename=${storename}&brandname=${storename}`
+      );
+    }
   }
 };
 </script>
@@ -66,7 +77,7 @@ export default {
   section {
     width: 100%;
     flex: 1;
-    overflow-y:auto;
+    overflow-y: auto;
 
     dl {
       width: 90%;

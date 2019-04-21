@@ -1,12 +1,12 @@
 <template>
-  <div class="index" :class="{'ani':isActive}">
-    <p @click="goHome">欢迎进入指尖杂货店</p>
-  </div>
+    <div class="index" :class="{'ani':isActive}">
+        <p @click="goHome">欢迎进入指尖杂货店</p>
+    </div>
 </template>
 
 <script>
 export default {
-  name: "index",
+  name: "byuserindex",
   data() {
     return {
       isActive: false
@@ -17,7 +17,7 @@ export default {
       let that = this;
       this.isActive = true;
       setTimeout(() => {
-        that.$router.push({ path: "/login" });
+        that.$router.push({ path: "/buyuserlogin" });
       }, 1000);
     }
   }

@@ -14,11 +14,14 @@
         <span style="color:gray">(1-3张)</span>
       </div>
       <div class="uploadbanner">
-        <img src="../assets/images/logo.png" alt="">
+        <p v-for="(i,k) in bannerUrl" v-bind:key="k">
+          <img :src="i" alt="">
+          <span v-on:click="closeimg(k)">x</span>
+        </p>
         <dl>
           <dt>+</dt>
           <dd>上传banner</dd>
-          <img :src="bannering" alt="">
+          <!-- <img :src="bannering" alt=""> -->
           <input type="file" name="files" v-on:change="(e)=>uploadbanner(e)">
         </dl>
       </div>
@@ -71,12 +74,16 @@
           <p>首页风格</p>
           <dl>
             <dt>
-              <img src="../assets/images/style1.png" alt="">
-              <input type="radio" name="style" v-on:change="(e)=>handleChangestyle(e,1)">
+              <label for="s1">
+                <img src="../assets/images/style1.png" alt="">
+                <input type="radio" name="style" v-on:change="(e)=>handleChangestyle(e,1)" id="s1">
+              </label>
             </dt>
             <dd>
-              <img src="../assets/images/style2.png" alt="">
-              <input type="radio" name="style" v-on:change="(e)=>handleChangestyle(e,2)">
+              <label for="s2">
+                <img src="../assets/images/style2.png" alt="">
+                <input type="radio" name="style" v-on:change="(e)=>handleChangestyle(e,2)" id="s2">
+              </label>
             </dd>
           </dl>
         </div>
@@ -86,12 +93,13 @@
   </div>
 </template>
 <script>
+import formData from "../utils/formdata";
 export default {
   name: "storesetting",
   data() {
     return {
       logoUrl: "", //logo
-      bannering: "",
+      // bannering: "",
       datearr: [
         {
           id: "d1",
@@ -135,60 +143,66 @@ export default {
     };
   },
   created() {
-    let search = window.location.search.slice(1);
-    let obj = {};
-    search.split("&").forEach((item, index) => {
-      obj[item.split("=")[0]] = decodeURI(item.split("=")[1]);
-    });
+    let obj = formData(window.location.search);
     let { storename, storeid, brandname } = obj;
-    this.storename = storename;
+    this.storename = decodeURI(storename);
     this.storeid = storeid;
-    this.brandname = brandname;
+    this.brandname = decodeURI(brandname);
   },
   methods: {
     upload(e) {
       let formdata = new FormData();
       formdata.append("files", e.target.files[0]);
-      this.$http
-        .post("/upload?store_id=b4f01938b537768d5b4637bc5a8f842b", formdata)
-        .then(
-          data => {
-            //console.log(data);
-            if (data.code === 1) {
-              alert(data.msg);
-              this.logoUrl = data.url[0].url;
-            } else {
-              alert(data.msg);
-            }
-          },
-          err => {
-            console.log(err);
-          }
-        );
-    },
-    uploadbanner(e) {
-      if (this.bannerUrl.length < 3) {
-        let formdata = new FormData();
-        formdata.append("files", e.target.files[0]);
-        this.$http
-          .post("/upload?store_id=b4f01938b537768d5b4637bc5a8f842b", formdata)
-          .then(
+      let url = e.target.files[0].name;
+      let type = url.slice(url.indexOf(".") + 1);
+      let reg = /(png|jpg|jpeg)/;
+      if (reg.test(url)) {
+        if ((e.target.files[0].size / 1024 / 1024) * 100 < 3) {
+          this.$http.post(`/upload?store_id=${this.storeid}`, formdata).then(
             data => {
               // console.log(data);
               if (data.code === 1) {
-                this.bannering = data.url[0].url;
-                this.bannerUrl.push(data.url[0].url);
-                this.mainimg = this.bannerUrl[0];
+                this.$message(data.msg);
+                this.logoUrl = data.url[0].url;
               } else {
-                alert(data.msg);
+                this.$message(data.msg);
               }
             },
             err => {
               console.log(err);
             }
           );
+        } else {
+          this.$message("您上传的文件格式过大");
+        }
       } else {
-        alert("banner只能上传1-3张！");
+        this.$message("请上传png或jpg格式");
+      }
+    },
+    closeimg(idx) {
+      this.bannerUrl.splice(idx, 1);
+    },
+    uploadbanner(e) {
+      if (this.bannerUrl.length < 3) {
+        let formdata = new FormData();
+        formdata.append("files", e.target.files[0]);
+        this.$http.post(`/upload?store_id=${this.storeid}`, formdata).then(
+          data => {
+            // console.log(data);
+            if (data.code === 1) {
+              this.bannering = data.url[0].url;
+              this.bannerUrl.push(data.url[0].url);
+              this.mainimg = this.bannerUrl[0];
+            } else {
+              this.$message(data.msg);
+            }
+          },
+          err => {
+            console.log(err);
+          }
+        );
+      } else {
+        this.$message("banner只能上传1-3张！");
       }
     },
     start_time(e) {
@@ -257,17 +271,17 @@ export default {
             logo: this.logoUrl
           })
           .then(data => {
-            console.log(data);
+            // console.log(data);
             if (data.code === 1) {
-              alert("设置店铺" + data.msg);
-              this.$router.push("/storeindex");
+              this.$message("设置店铺" + data.msg);
+              this.$router.push(`/storeindex?storeid=${this.storeid}`);
             }
           })
           .catch(err => {
             console.log(err);
           });
       } else {
-        alert("参数不完整,请填写完整信息!!");
+        this.$message("参数不完整,请填写完整信息!!");
       }
     }
   }
@@ -281,6 +295,7 @@ export default {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+  background: #fff;
   section {
     flex: 1;
     overflow-y: auto;
@@ -311,6 +326,7 @@ export default {
         top: 0;
         left: 0;
         opacity: 0;
+        background: #eee;
       }
       img {
         width: 100%;
@@ -322,9 +338,29 @@ export default {
     }
     .uploadbanner {
       width: 100%;
-      img {
+      p {
         width: 100%;
+        position: relative;
+        span {
+          background: rgba(0, 0, 0, 0.8);
+          border-radius: 50%;
+          color: #fff;
+          display: inline-block;
+          width: pxTorem(16px);
+          height: pxTorem(16px);
+          font-size: pxTorem(12px);
+          text-align: center;
+          line-height: pxTorem(16px);
+          position: absolute;
+          right: pxTorem(5px);
+          top: pxTorem(5px);
+        }
+        img {
+          width: 100%;
+          height: pxTorem(140px);
+        }
       }
+
       dl {
         width: 100%;
         height: pxTorem(150px);
@@ -351,6 +387,7 @@ export default {
           top: 0;
           left: 0;
           opacity: 0;
+          background: #eee;
         }
       }
     }
@@ -366,6 +403,9 @@ export default {
         padding: 0 pxTorem(10px);
         box-sizing: border-box;
         line-height: pxTorem(40px);
+        // input{
+        //   background: #fff;
+        // }
         .time {
           input {
             width: pxTorem(100px);

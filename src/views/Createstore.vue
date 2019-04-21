@@ -2,7 +2,7 @@
  * @Author: mikey.zhang 创建店铺
  * @Date: 2019-04-12 13:27:27 
  * @Last Modified by: mikey.zhang
- * @Last Modified time: 2019-04-14 23:19:44
+ * @Last Modified time: 2019-04-19 22:17:05
  */
 
 <template>
@@ -48,17 +48,12 @@
       </p>
     </section>
     <footer v-on:click="createstore">我要开店</footer>
-    <!-- <Message v-if="isShow" :ismessage="ismessage">请填写完整信息!!!</Message> -->
   </div>
 </template>
 
 <script>
-import Message from "@/components/Message.vue";
 export default {
   name: "createstore",
-  components: {
-    Message
-  },
   data() {
     return {
       list: [],
@@ -133,7 +128,7 @@ export default {
           })
           .then(data => {
             if (data && data.code === 1) {
-              alert("恭喜你,创建成功!");
+              this.$message("恭喜你,创建成功!");
               // console.log(data);
               that.$router.push(
                 `/storeindex?storename=${this.store_name}&storeid=${
@@ -141,7 +136,7 @@ export default {
                 }&brandname=${this.store_name}`
               );
             } else {
-              alert("传递参数有误");
+              this.$message("传递参数有误");
             }
           })
           .catch(err => {
@@ -150,7 +145,7 @@ export default {
           });
       } else {
         this.isShow = true;
-        alert("参数不完整");
+       this.$message("参数不完整");
       }
     }
   }

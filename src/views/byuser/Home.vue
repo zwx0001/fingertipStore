@@ -2,7 +2,7 @@
  * @Author: mikey.zhang 店铺列表
  * @Date: 2019-04-12 13:27:27 
  * @Last Modified by: mikey.zhang
- * @Last Modified time: 2019-04-19 22:19:12
+ * @Last Modified time: 2019-04-21 13:53:39
  */
 
 <template>
@@ -33,27 +33,17 @@
         </dd>
       </dl>
     </section>
-    <footer v-on:click="gocreatestore">去开店</footer>
-    <Dialog v-if="isShowdialog" title="开店须知" :isShowFn="isShowFn">
-      <div class="admittance">
-        <p v-for="(i,k) in admittance" v-bind:key="k">{{k+1}}.{{i}}</p>
-      </div>
-    </Dialog>
   </div>
 </template>
 
 <script>
-import Dialog from "@/components/Dialog.vue";
 export default {
-  name: "storeindex",
-  components: {
-    Dialog
-  },
+  name: "byuserhome",
+
   data() {
     return {
       storelist: [],
-      admittance: [],
-      isShowdialog: false
+      admittance: []
     };
   },
   created() {
@@ -72,29 +62,9 @@ export default {
       });
   },
   methods: {
-    gocreatestore() {
-      this.$http
-        .get("/store/admittance") //开店须知
-        .then(data => {
-          // console.log(data);
-          if (data.code === 1) {
-            this.admittance = data.admittance;
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      this.isShowdialog = true;
-    },
-    isShowFn(isTrue) {
-      this.isShowdialog = false;
-      if (isTrue) {
-        this.$router.push("/createstore");
-      }
-    },
     gostoreindex(storeid, storename) {
       this.$router.push(
-        `/storeindex?storeid=${storeid}&storename=${storename}&brandname=${storename}`
+        `/byuserstoreindex?storeid=${storeid}&storename=${storename}`
       );
     }
   }

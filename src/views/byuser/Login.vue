@@ -1,21 +1,31 @@
 <template>
-  <div class="login">
-    <div class="box">
-      <input placeholder="请输入账号" v-model="username" name="username" @input="(e)=>handleInput(e)">
-      <br>
-      <input placeholder="请输入密码" v-model="password" name="password" @input="(e)=>handleInput(e)">
-      <br>
-      <button v-on:click="gohome">登录</button>
-      <a href="/register">新用户注册</a>
+    <div class="login">
+        <div class="box">
+            <input
+                placeholder="请输入账号"
+                v-model="username"
+                name="username"
+                @input="(e)=>handleInput(e)"
+            >
+            <br>
+            <input
+                placeholder="请输入密码"
+                v-model="password"
+                name="password"
+                @input="(e)=>handleInput(e)"
+            >
+            <br>
+            <button v-on:click="gohome">登录</button>
+            <a href="/byuserregister">新用户注册</a>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-import Cookie from "../utils/cookie";
+import Cookie from "../../utils/cookie";
 import { setTimeout } from "timers";
 export default {
-  name: "login",
+  name: "byuserlogin",
   data() {
     return {
       username: "",
@@ -31,7 +41,7 @@ export default {
       console.log(this.password);
       Cookie.set("uid", "asdascxv123asd");
 
-      this.$router.push("/storelist");
+      this.$router.push("/byuserhome");
     }
   }
 };
