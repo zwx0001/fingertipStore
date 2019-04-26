@@ -2,7 +2,7 @@
  * @Author: mikey.zhang  店铺首页
  * @Date: 2019-04-12 13:27:54 
  * @Last Modified by: mikey.zhang
- * @Last Modified time: 2019-04-20 10:52:49
+ * @Last Modified time: 2019-04-26 11:54:35
  */
 
 <template>
@@ -39,7 +39,7 @@
       <li v-on:click="goproductlist">
         <img src="../assets/images/pic7.png" alt="商品列表">
       </li>
-      <li>
+      <li v-on:click="goreport">
         <img src="../assets/images/pic8.png" alt="收益报表">
       </li>
       <li class="mystore">
@@ -109,6 +109,9 @@ export default {
     },
     goproductlist() {
       this.$router.push(`/productlist${this.search}`);
+    },
+    goreport() {
+      this.$router.push(`/report?storeid=${formData(this.search)["storeid"]}`);
     }
   }
 };

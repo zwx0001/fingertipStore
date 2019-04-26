@@ -1,40 +1,40 @@
 <template>
-    <div class="allproduct">
-        <header>所有商品列表</header>
-        <section>
-            <div class="main">
-                <div class="item" v-for="(i,k) in list" v-bind:key="k">
-                    <div class="item_top">
-                        <img class="pic1" :src="i.cart_image" alt="">
-                        <p>{{i.goods_name}}</p>
-                    </div>
-                    <div class="item_bottom">
-                        <p>
-                            <span>商品编号:</span>
-                            <span>{{i.serial_number}}</span>
-                        </p>
-                        <p>
-                            <span>销售量:</span>
-                            <span>{{i.sold_count}}</span>
-                        </p>
-                        <p>
-                            <span>售价:</span>
-                            <span>{{i.price}}.00</span>
-                        </p>
-                        <p>
-                            <span>状态:</span>
-                            <span>审核中</span>
-                        </p>
-                        <p>
-                            <span>申请时间:</span>
-                            <span>{{new Date(i.create_time*1).toLocaleDateString()}}</span>
-                        </p>
-                    </div>
-                    <p>修改</p>
-                </div>
-            </div>
-        </section>
-    </div>
+  <div class="allproduct">
+    <header>所有商品列表</header>
+    <section>
+      <div class="main">
+        <div class="item" v-for="(i,k) in list" v-bind:key="k">
+          <div class="item_top">
+            <img class="pic1" :src="i.cart_image" alt="">
+            <p>{{i.goods_name}}</p>
+          </div>
+          <div class="item_bottom">
+            <p>
+              <span>商品编号:</span>
+              <span>{{i.serial_number}}</span>
+            </p>
+            <p>
+              <span>销售量:</span>
+              <span>{{i.sold_count}}</span>
+            </p>
+            <p>
+              <span>售价:</span>
+              <span>{{i.price}}.00</span>
+            </p>
+            <p>
+              <span>状态:</span>
+              <span>审核中</span>
+            </p>
+            <p>
+              <span>申请时间:</span>
+              <span>{{new Date(i.create_time*1).toLocaleDateString()}}</span>
+            </p>
+          </div>
+          <p>修改</p>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 <script>
 export default {
@@ -48,7 +48,7 @@ export default {
   created() {
     new Date().toLocaleDateString();
     this.$http
-      .get("/goods/totallist")
+      .get("/store/goods/totallist")
       .then(data => {
         // console.log(data);
         if (data.code === 1) {

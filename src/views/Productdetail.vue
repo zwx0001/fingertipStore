@@ -47,8 +47,6 @@
         <p>
           <span>规格信息</span>
           <img src="../assets/images/row_up.png" alt="" v-on:click="isShowFn('规格信息')">
-          <!-- <br>
-          -->
         </p>
         <div class="content" v-if="isShow['规格信息']">
           <p>
@@ -151,7 +149,7 @@ export default {
   created() {
     this.msg = this.$route.query;
     this.price = this.msg.price;
-    // console.log(this.msg.image);
+    // console.log(this.msg);
     // console.log(this.msg);
   },
   methods: {

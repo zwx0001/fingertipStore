@@ -93,9 +93,13 @@
   </div>
 </template>
 <script>
+import Checkbox from "../components/checkbox/checkbox";
 import formData from "../utils/formdata";
 export default {
   name: "storesetting",
+  components: {
+    Checkbox
+  },
   data() {
     return {
       logoUrl: "", //logo
@@ -103,31 +107,38 @@ export default {
       datearr: [
         {
           id: "d1",
-          name: "星期一"
+          name: "星期一",
+          flag: false
         },
         {
           id: "d2",
-          name: "星期二"
+          name: "星期二",
+          flag: false
         },
         {
           id: "d3",
-          name: "星期三"
+          name: "星期三",
+          flag: false
         },
         {
           id: "d4",
-          name: "星期四"
+          name: "星期四",
+          flag: false
         },
         {
           id: "d5",
-          name: "星期五"
+          name: "星期五",
+          flag: false
         },
         {
           id: "d6",
-          name: "星期六"
+          name: "星期六",
+          flag: false
         },
         {
           id: "d7",
-          name: "星期日"
+          name: "星期日",
+          flag: false
         }
       ],
       bannerUrl: [], //banner列表

@@ -1,13 +1,13 @@
 <template>
-    <transition name="alert" @after-leave="transitionComplete">
-        <div class="alert-mask" v-show="visible">
-            <div class="box">
-                <p class="tit">提示</p>
-                <div class="contentmsg">{{opt}}</div>
-                <p class="btn" v-on:click="cancel">确定</p>
-            </div>
-        </div>
-    </transition>
+  <transition name="alert" @after-leave="transitionComplete">
+    <div class="alert-mask" v-show="visible">
+      <div class="box">
+        <p class="tit">提示</p>
+        <div class="contentmsg">{{opt}}</div>
+        <p class="btn" v-on:click="cancel">确定</p>
+      </div>
+    </div>
+  </transition>
 </template>
 <script>
 export default {
@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       visible: false,
-      opt:''
+      opt: ""
     };
   },
   methods: {

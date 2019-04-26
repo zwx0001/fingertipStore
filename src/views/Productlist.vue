@@ -104,17 +104,33 @@ export default {
       let arr = this.list.filter(item => {
         return item.isTrue;
       });
-
+      if (arr.length === 0) {
+        this.$message("请先选择商品");
+        return;
+      }
       let arrlist = arr.map(item => {
         return item.goods_id;
       });
+
+      this.$http
+        .post("/store/goods/shelfInBulk", {
+          goods_id_list: arrlist,
+          status: "1"
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
       if (status === "1") {
         if (
           arr.every(item => {
             return item.status === 1;
           })
         ) {
-          this.$message("该写商品已经全部上架");
+          this.$message("该些商品已经全部上架");
         } else {
           this.$http
             .post("/store/goods/shelfInBulk", {
@@ -123,6 +139,7 @@ export default {
             })
             .then(data => {
               if (data.code === 1) {
+                console.log(data);
                 this.$message("该商品已上架success!!");
                 this.list.forEach(item => {
                   if (item.isTrue) {
@@ -150,6 +167,7 @@ export default {
             })
             .then(data => {
               if (data.code === 1) {
+                console.log(data);
                 this.$message("该商品已下架success!!");
                 this.list.forEach(item => {
                   if (item.isTrue) {
@@ -163,125 +181,67 @@ export default {
             });
         }
       }
+    },
+    onshelf() {
+      let arr = this.list.filter(item => {
+        return item.isTrue;
+      });
+      if (arr.length === 0) {
+        this.$message("请先选择商品");
+        return;
+      }
+      let arrlist = arr.map(item => {
+        return item.goods_id;
+      });
 
-      // if (
-      //   arr.every(item => {
-      //     return item.status === 1;
-      //   })
-      // ) {
-      //   this.$message("该写商品已经全部上架");
-      // } else if (
-      //   arr.every(item => {
-      //     return item.status === 0;
-      //   })
-      // ) {
-      //   this.$message("该写商品已经全部下架");
-      // } else {
-      //   this.$http
-      //     .post("/store/goods/shelfInBulk", {
-      //       goods_id_list: arrlist,
-      //       status: status
-      //     })
-      //     .then(data => {
-      //       console.log(data);
-      //       if (data.code === 1) {
-      //         if (status === "0") {
-      //           this.$message("该商品已上架success!!");
-      //           this.list.forEach(item => {
-      //             if (item.isTrue) {
-      //               item.status = 1;
-      //             }
-      //           });
-      //         } else {
-      //           this.$message("该商品已下架success!!");
-      //           this.list.forEach(item => {
-      //             if (item.isTrue) {
-      //               item.status = 2;
-      //             }
-      //           });
-      //         }
-      //       }
-      //     })
-      //     .catch(err => {
-      //       console.log(err);
-      //     });
+      this.$http
+        .post("/store/goods/onshelf", {
+          goods_id: arrlist[0]
+        })
+        .then(data => {
+          if (data.code === 1) {
+            this.$message("该商品已上架success!!");
+            this.list.forEach(item => {
+              if (item.isTrue) {
+                item.status = 1;
+              }
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    offshelf() {
+      let arr = this.list.filter(item => {
+        return item.isTrue;
+      });
+      if (arr.length === 0) {
+        this.$message("请先选择商品");
+        return;
+      }
+      let arrlist = arr.map(item => {
+        return item.goods_id;
+      });
+
+      this.$http
+        .post("/store/goods/offshelf", {
+          goods_id: arrlist[0]
+        })
+        .then(data => {
+          if (data.code === 1) {
+            this.$message("该商品已下架success!!");
+            this.list.forEach(item => {
+              if (item.isTrue) {
+                item.status = 2;
+              }
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
-
-    // if (arr.length > 0) {
-    //   let array = arr.map((item, index) => {
-    //     return new Promise((resolve, reject) => {
-    //       this.$http
-    //         .post("/store/goods/onshelf", {
-    //           goods_id: arr[index].goods_id
-    //         })
-    //         .then(data => {
-    //           resolve(data);
-    //         })
-    //         .catch(err => {
-    //           console.log(err);
-    //         });
-    //     });
-    //   });
-
-    //   Promise.all(array)
-    //     .then(data => {
-    //       let arr = data.filter((item, index) => {
-    //         return item.code !== 1;
-    //       });
-    //       if (arr.length === 0) {
-    //         this.$message("该商品已上架!!");
-    //         this.list.forEach(item => {
-    //           item.status = 1;
-    //         });
-    //       }
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     });
-    // } else {
-    //   this.$message("请选择上架商品");
-    // }
-    // }
-    // offshelf() {
-    //   let arr = this.list.filter(item => {
-    //     return item.isTrue;
-    //   });
-
-    //   if (arr.length > 0) {
-    //     let array = arr.map((item, index) => {
-    //       return new Promise((resolve, reject) => {
-    //         this.$http
-    //           .post("/store/goods/offshelf", {
-    //             goods_id: arr[index].goods_id
-    //           })
-    //           .then(data => {
-    //             resolve(data);
-    //           })
-    //           .catch(err => {
-    //             console.log(err);
-    //           });
-    //       });
-    //     });
-
-    //     Promise.all(array)
-    //       .then(data => {
-    //         let arr = data.filter((item, index) => {
-    //           return item.code !== 1;
-    //         });
-    //         if (arr.length === 0) {
-    //           this.$message("该商品已上架!!");
-    //           this.list.forEach(item => {
-    //             item.status = 2;
-    //           });
-    //         }
-    //       })
-    //       .catch(err => {
-    //         console.log(err);
-    //       });
-    //   } else {
-    //     this.$message("请选择上架商品");
-    //   }
-    // }
   }
 };
 </script>

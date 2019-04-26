@@ -2,7 +2,7 @@
  * @Author: mikey.zhang 创建店铺
  * @Date: 2019-04-12 13:27:27 
  * @Last Modified by: mikey.zhang
- * @Last Modified time: 2019-04-19 22:17:05
+ * @Last Modified time: 2019-04-22 22:13:15
  */
 
 <template>
@@ -124,7 +124,7 @@ export default {
             idcard: this.idcard, //idcard身份证号
             uid: this.uid, //用户id
             cat: this.cat, //一级分类
-            store_name: this.store_name //店铺名称
+            store_name: this.store_name//店铺名称
           })
           .then(data => {
             if (data && data.code === 1) {

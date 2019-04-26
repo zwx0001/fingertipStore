@@ -1,9 +1,14 @@
 <template>
   <div class="register">
     <div class="box">
-      <input placeholder="请输入账号" v-model="username" name="username" @input="(e)=>handleInput(e)">
+      <input placeholder="请输入手机号" v-model="username" name="username" @input="(e)=>handleInput(e)">
       <br>
       <input placeholder="请输入密码" v-model="password" name="password" @input="(e)=>handleInput(e)">
+      <br>
+      <div class="yzm">
+        <input placeholder="请输入验证码" v-model="yzm" name="yzm" @input="(e)=>handleInput(e)">
+        <span>验证码</span>
+      </div>
       <br>
       <button v-on:click="gohome">注册</button>
     </div>
@@ -16,7 +21,8 @@ export default {
   data() {
     return {
       username: "",
-      password: ""
+      password: "",
+      yzm: ""
     };
   },
   methods: {
@@ -26,7 +32,23 @@ export default {
     gohome: function() {
       console.log(this.username);
       console.log(this.password);
-      this.$router.push("/byuserhome");
+      console.log(this.yzm);
+      if (this.username.trim() && this.password.trim() && this.yzm.trim()) {
+        this.$http
+          .post("/buyer/user/register",{
+            username:this.username.trim(),
+            
+          })
+          .then(data => {
+            console.log(data);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.$message("请填写完整信息");
+      }
+      //this.$router.push("/byuserhome");
     }
   }
 };
@@ -60,6 +82,15 @@ export default {
       font-size: pxTorem(15px);
       border-radius: pxTorem(10px);
       background: cornflowerblue;
+    }
+    .yzm {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      span {
+        width: pxTorem(100px);
+      }
     }
   }
 }

@@ -10,9 +10,9 @@ let createLoging = function(opt) {
     instance.$destroy();
     document.body.removeChild(instance.$el);
   });
-  if (opt) {
-    instance.opt = opt;
-  }
+  // if (opt) {
+  //   instance.opt = opt;
+  // }
   instance.visible = true;
   document.body.appendChild(instance.$el);
   return instance;

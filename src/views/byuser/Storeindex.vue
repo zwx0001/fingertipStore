@@ -2,36 +2,47 @@
  * @Author: mikey.zhang 店铺首页
  * @Date: 2019-04-21 14:35:49 
  * @Last Modified by: mikey.zhang
- * @Last Modified time: 2019-04-21 19:59:04
+ * @Last Modified time: 2019-04-24 20:46:35
  */
 
 <template>
   <div class="byuserstoreindex">
     <header>{{this.$route.query.storename}}</header>
-    <div class="box">
+    <div id="box" ref="wrapper">
       <section>
-        <p class="down">下拉刷新……</p>
+        <p class="down" ref="down">
+          <span>下拉刷新……</span>
+          <img src="../../assets/images/pic.gif" alt="">
+        </p>
         <div class="address">
           <img src="../../assets/images/address.png" alt="">
-          <span>请选择配送地址</span>
+          <span v-if="loc===''">请选择配送地址</span>
+          <span v-if="loc!==''">{{loc}}</span>
         </div>
         <div class="info">
           <div class="info_left">
-            <img src="../../assets/images/u=1018545691,1639014916&fm=26&gp=0.jpg" alt="">
+            <img :src="info.logo" alt="">
             <dl>
               <dt>
-                喵掌柜杂货店
-                <span>已打烊</span>
+                {{info.brand_name}}
+                <span v-if="isbusiness">正在营业中</span>
+                <span v-if="!isbusiness">已打烊</span>
               </dt>
               <dd>满49包邮</dd>
             </dl>
           </div>
           <div class="info_right">
-            <dl>
+            <dl v-if="isshow" v-on:click="shows">
               <dt>
                 <img src="../../assets/images/a.png" alt="">
               </dt>
               <dd>已关注</dd>
+            </dl>
+            <dl v-if="!isshow" v-on:click="shows">
+              <dt>
+                <img src="../../assets/images/b.png" alt="">
+              </dt>
+              <dd>点击关注</dd>
             </dl>
           </div>
         </div>
@@ -59,37 +70,118 @@
             <span :class="tabidx===2?'active':''" v-on:click="tabIdx(2)">跳楼促销</span>
           </p>
           <div class="section1" v-show="tabidx===0">
-            <dl v-for="(i,k) in list" v-bind:key="k">
+            <dl
+              :class="info.indexstyle_id===1?'active':''"
+              v-for="(i,k) in list2"
+              v-bind:key="i.goods_id"
+              v-on:click="goprodetail(i)"
+            >
               <dt>
-                <img src="../../assets/images/u=236744911,919043854&fm=26&gp=0.jpg" alt="">
+                <img v-lazy="i.cart_image" alt="">
               </dt>
               <dd>
-                <p>毛掌柜的邮件</p>
-                <p>规格:1000G</p>
+                <p>{{i.goods_name}}</p>
                 <p>
-                  <span>￥40.00</span>
+                  <span>￥{{i.price}}</span>
                   <span></span>
                 </p>
               </dd>
             </dl>
-            <dl>
+            <dl
+              :class="info.indexstyle_id===1?'active':''"
+              v-for="(i,k) in list"
+              v-bind:key="k"
+              v-on:click="goprodetail(i)"
+            >
               <dt>
-                <img src="../../assets/images/u=236744911,919043854&fm=26&gp=0.jpg" alt="">
+                <img v-lazy="i.img_url" alt="">
               </dt>
               <dd>
-                <p>毛掌柜的邮件</p>
-                <p>规格:1000G</p>
+                <p>{{i.product_name}}</p>
                 <p>
-                  <span>￥40.00</span>
+                  <span>￥{{i.price.dangdang_price}}</span>
                   <span></span>
                 </p>
               </dd>
             </dl>
           </div>
-          <div class="section2" v-show="tabidx===1">2</div>
-          <div class="section3" v-show="tabidx===2">3</div>
+          <div class="section2 section1" v-show="tabidx===1">
+            <dl
+              :class="info.indexstyle_id===1?'active':''"
+              v-for="(i,k) in list2"
+              v-bind:key="i.goods_id"
+              v-on:click="goprodetail(i)"
+            >
+              <dt>
+                <img v-lazy="i.cart_image" alt="">
+              </dt>
+              <dd>
+                <p>{{i.goods_name}}</p>
+                <p>
+                  <span>￥{{i.price}}</span>
+                  <span></span>
+                </p>
+              </dd>
+            </dl>
+            <dl
+              :class="info.indexstyle_id===1?'active':''"
+              v-for="(i,k) in list"
+              v-bind:key="k"
+              v-on:click="goprodetail(i)"
+            >
+              <dt>
+                <img v-lazy="i.img_url" alt="">
+              </dt>
+              <dd>
+                <p>{{i.product_name}}</p>
+                <p>
+                  <span>￥{{i.price.dangdang_price}}</span>
+                  <span></span>
+                </p>
+              </dd>
+            </dl>
+          </div>
+          <div class="section3 section1" v-show="tabidx===2">
+            <dl
+              :class="info.indexstyle_id===1?'active':''"
+              v-for="(i,k) in list2"
+              v-bind:key="i.goods_id"
+              v-on:click="goprodetail(i)"
+            >
+              <dt>
+                <img v-lazy="i.cart_image" alt="">
+              </dt>
+              <dd>
+                <p>{{i.goods_name}}</p>
+                <p>
+                  <span>￥{{i.price}}</span>
+                  <span></span>
+                </p>
+              </dd>
+            </dl>
+            <dl
+              :class="info.indexstyle_id===1?'active':''"
+              v-for="(i,k) in list"
+              v-bind:key="k"
+              v-on:click="goprodetail(i)"
+            >
+              <dt>
+                <img v-lazy="i.img_url" alt="">
+              </dt>
+              <dd>
+                <p>{{i.product_name}}</p>
+                <p>
+                  <span>￥{{i.price.dangdang_price}}</span>
+                  <span></span>
+                </p>
+              </dd>
+            </dl>
+          </div>
         </div>
-        <p class="up">上拉加载……</p>
+        <p class="up" ref="up">
+          <span>上拉加载……</span>
+          <img src="../../assets/images/pic.gif" alt="">
+        </p>
       </section>
     </div>
     <footer>
@@ -99,31 +191,47 @@
         </dt>
         <dd>首页</dd>
       </dl>
-      <dl :class="idx===1?'isactive':''" v-on:click="isActive(1)">
-        <dt>
-          <i class="iconfont icon-gouwucheman"></i>
-        </dt>
-        <dd>购物车</dd>
-      </dl>
-      <dl :class="idx===2?'isactive':''" v-on:click="isActive(2)">
-        <dt>
-          <i class="iconfont icon-wode"></i>
-        </dt>
-        <dd>我的</dd>
-      </dl>
+      <Router-link to="/byusershopcarlist">
+        <dl :class="idx===1?'isactive':''" v-on:click="isActive(1)">
+          <dt>
+            <i class="iconfont icon-gouwucheman"></i>
+          </dt>
+          <dd>购物车</dd>
+        </dl>
+      </Router-link>
+      <Router-link to="/byusermine">
+        <dl :class="idx===2?'isactive':''" v-on:click="isActive(2)">
+          <dt>
+            <i class="iconfont icon-wode"></i>
+          </dt>
+          <dd>我的</dd>
+        </dl>
+      </Router-link>
     </footer>
   </div>
 </template>
 <script>
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import BScroll from "better-scroll";
-const box = document.querySelector(".box");
-const scroll = new BScroll(box);
-let index = 0;
+let longitude = "";
+let latitude = "";
+let index = 1;
+let week = [
+  "星期一",
+  "星期二",
+  "星期三",
+  "星期四",
+  "星期五",
+  "星期六",
+  "星期日"
+];
+let day = week[new Date().getDay() - 1];
 export default {
   name: "byuserstoreindex",
   data() {
     return {
+      isbusiness: true,
+      info: [],
       idx: 0,
       swiperOption: {
         autoplay: {
@@ -144,22 +252,56 @@ export default {
         }
       },
       tabidx: 0,
-      list: []
+      list: [],
+      list2: [],
+      loc: "",
+      isshow: true
     };
   },
+
   created() {
+    let { storeid, storename } = this.$route.query;
+
+    this.getdata(0);
     this.$http
-      .get("/store/goods/goodslist", {
-        page: 4
+      .get("/location", {
+        lat: latitude,
+        lng: longitude
       })
       .then(data => {
-        console.log(data);
+        // console.log(data);
         if (data.code === 1) {
-          this.list = data.data;
+          this.loc = data.result.ad_info.city;
         }
       })
       .catch(err => {
         console.log(err);
+      });
+
+    this.$http
+      .get(`/store/getstore?store_id=${storeid}`)
+      .then(data => {
+        if (data.code === 1) {
+          this.info = data.result[0];
+          // console.log(data);
+          if (this.info.business_time.indexOf(day) === -1) {
+            this.isbusiness = false;
+          }
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    this.$http
+      .get(`/buyer/homelist?type=0&pagesize=5&page=1&store_id=${storeid}`)
+      .then(data => {
+        // console.log(data);
+        if (data.code === 1) {
+          this.list2 = data.result;
+        }
+      })
+      .catch(err => {
+        consoe.log(err);
       });
   },
   computed: {
@@ -167,12 +309,108 @@ export default {
       return this.$refs.mySwiper.swiper;
     }
   },
+  mounted() {
+    let box = this.$refs.wrapper;
+    let up = this.$refs.up;
+    let down = this.$refs.down;
+    const myBScroll = new BScroll(box);
+
+    this.scroll = new BScroll(this.$refs.wrapper, {
+      click: true,
+      // 上拉加载
+      pullUpLoad: {
+        // 当上拉距离超过30px时触发 pullingUp 事件
+        threshold: -30
+      },
+      // 下拉刷新
+      pullDownRefresh: {
+        // 下拉距离超过30px触发pullingDown事件
+        threshold: 30,
+        // 回弹停留在距离顶部20px的位置
+        stop: 20
+      }
+    });
+    this.scroll.on("pullingUp", () => {
+      console.log("处理上拉加载操作");
+      index++;
+      console.log(index);
+      this.getdata(index);
+      //this.$loading();
+      setTimeout(() => {
+        // 事情做完，需要调用此方法告诉 better-scroll 数据已加载，否则上拉事件只会执行一次
+
+        this.scroll.finishPullUp();
+      }, 4000);
+    });
+    this.scroll.on("pullingDown", () => {
+      console.log("处理下拉刷新操作");
+      index = 0;
+      this.getdata(0);
+      setTimeout(() => {
+        // console.log("asfsaf");
+        this.$message("刷新完成");
+        // 事情做完，需要调用此方法告诉 better-scroll 数据已加载，否则下拉事件只会执行一次
+        this.scroll.finishPullDown();
+      }, 2000);
+    });
+
+    if (navigator.geolocation) {
+      //获取地理位置
+      navigator.geolocation.getCurrentPosition(function(position) {
+        longitude = position.coords.longitude;
+        latitude = position.coords.latitude;
+      });
+    }
+  },
   methods: {
     isActive(idx) {
       this.idx = idx;
     },
     tabIdx(idx) {
+      let { storeid, storename } = this.$route.query;
       this.tabidx = idx;
+      this.$http
+        .get(
+          `/buyer/homelist?type=${idx}&pagesize=5&page=1&store_id=${storeid}`
+        )
+        .then(data => {
+          // console.log(data);
+          if (data.code === 1) {
+            this.list2 = data.result;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    getdata(idx) {
+      this.$http
+        .get("/store/goods/goodslist", {
+          page: idx
+        })
+        .then(data => {
+          // console.log(data);
+          if (data.code === 1) {
+            if (idx === 0) {
+              this.list = data.data;
+            } else {
+              this.list = [...this.list, ...data.data];
+            }
+            // console.log(this.list);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    shows(idx) {
+      this.isshow = !this.isshow;
+    },
+    goprodetail(i) {
+      this.$router.push({
+        path: "/byuserprodetail",
+        query: i
+      });
     }
   }
 };
@@ -186,36 +424,38 @@ export default {
   align-items: center;
   flex-direction: column;
 }
-.box {
+#box {
   width: 100%;
   height: 100%;
-  background: green;
+  flex: 1;
   overflow: hidden;
 }
 section {
   width: 100%;
-  flex: 1;
-  overflow-y: auto;
   position: relative;
-  // background: pink;
-  // > p {
-  //   width: 100%;
-  //   height: pxTorem(40px);
-  //   line-height: pxTorem(40px);
-  //   font-size: pxTorem(18px);
-  //   background: rgba(0, 0, 0, 0.5);
-  //   color: #fff;
-  //   text-align: center;
-  //   position: absolute;
-  // }
-  // .up {
-  //   left: 0;
-  //   bottom: pxTorem(-40px);
-  // }
-  // .down {
-  //   left: 0;
-  //   top: pxTorem(-40px);
-  // }
+
+  > p {
+    width: 100%;
+    height: pxTorem(40px);
+    line-height: pxTorem(40px);
+    font-size: pxTorem(18px);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    text-align: center;
+    position: absolute;
+    img {
+      width: pxTorem(25px);
+      vertical-align: middle;
+    }
+  }
+  .up {
+    left: 0;
+    bottom: pxTorem(-40px);
+  }
+  .down {
+    left: 0;
+    top: pxTorem(-40px);
+  }
   .address {
     width: 100%;
     height: pxTorem(40px);
@@ -292,7 +532,6 @@ section {
       width: pxTorem(40px);
       height: pxTorem(20px);
       line-height: pxTorem(20px);
-
       margin-left: pxTorem(320px);
     }
   }
@@ -314,6 +553,12 @@ section {
       }
     }
     .section1 {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: pxTorem(8px);
+      box-sizing: border-box;
+
       dl {
         width: 100%;
         padding: pxTorem(10px);
@@ -322,31 +567,47 @@ section {
         justify-content: space-between;
         border-bottom: solid pxTorem(1px) #ccc;
       }
+      dl.active {
+        width: 47%;
+        overflow-x: auto;
+        margin-bottom: pxTorem(10px);
+        margin-right: pxTorem(10px);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: column;
+      }
+
       dt {
+        width: 30%;
         img {
           width: pxTorem(80px);
           height: pxTorem(80px);
           border-radius: pxTorem(6px);
+          margin: 0 auto;
         }
-        margin-right: pxTorem(10px);
       }
       dd {
+        width: 70%;
         flex: 1;
         display: flex;
         justify-content: space-between;
         flex-direction: column;
+
         p:nth-child(1) {
-          font-size: pxTorem(20px);
+          width: 100%;
+          font-size: pxTorem(16px);
+          overflow: hidden;
+          white-space: nowrap;
+          line-height: pxTorem(35px);
+          text-overflow: ellipsis;
         }
         p:nth-child(2) {
-          font-size: pxTorem(14px);
-          color: gray;
-        }
-        p:nth-child(3) {
           font-size: pxTorem(18px);
           display: flex;
           justify-content: space-between;
           align-items: center;
+
           span:nth-child(2) {
             display: inline-block;
             width: pxTorem(30px);
@@ -366,6 +627,7 @@ header {
   text-align: center;
   line-height: pxTorem(44px);
   font-size: pxTorem(18px);
+  background: #fff;
 }
 footer {
   width: 100%;

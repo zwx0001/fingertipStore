@@ -1,7 +1,9 @@
 <template>
   <transition name="log" @after-leave="transitionComplete">
     <div v-show="visible" class="loging-mask">
-      <p>{{opt}}</p>
+      <p>
+        <img src="../../assets/images/loading.gif" alt="">
+      </p>
     </div>
   </transition>
 </template>
@@ -12,10 +14,14 @@ export default {
   data() {
     return {
       visible: false,
-      opt: "Loading..."
+      //opt: "Loading..."
     };
   },
-  components: {},
+  mounted() {
+    setTimeout(() => {
+      this.visible = false;
+    }, 2000);
+  },
   methods: {
     transitionComplete() {
       this.$emit("afterleave", "动画结束");
@@ -31,7 +37,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.1);
   opacity: 1;
   > p {
     color: #fff;
@@ -40,6 +46,9 @@ export default {
     position: absolute;
     transform: translate3d(-50%, -50%, 0);
     font-size: pxTorem(20px);
+  }
+  img {
+    border-radius: pxTorem(10px);
   }
 }
 .log-enter {

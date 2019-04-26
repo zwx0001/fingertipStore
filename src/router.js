@@ -83,6 +83,11 @@ export default new Router({
       component: () => import("@/views/Allproduct.vue") //所有商品列表
     },
     {
+      path: "/report",
+      name: "report",
+      component: () => import("@/views/Report.vue") //销售报表
+    },
+    {
       path: "/byuserindex",
       name: "byuserindex",
       component: () => import("@/views/byuser/Index.vue") //用户端首页
@@ -106,6 +111,26 @@ export default new Router({
       path: "/byuserstoreindex",
       name: "byuserstoreindex",
       component: () => import("@/views/byuser/Storeindex.vue") //app店铺
+    },
+    {
+      path: "/productiondetail",
+      name: "productiondetail",
+      component: () => import("@/views/byuser/Productiondetail.vue") //商品详情
+    },
+    {
+      path: "/byuserprodetail",
+      name: "prodetail",
+      component: () => import("@/views/byuser/Prodetail.vue") //商品详情
+    },
+    {
+      path: "/byusermine",
+      name: "mine",
+      component: () => import("@/views/byuser/Mine.vue") //我的
+    },
+    {
+      path: "/byusershopcarlist",
+      name: "shopcar",
+      component: () => import("@/views/byuser/Shopcar.vue") //购物车展示列表
     }
   ]
 });

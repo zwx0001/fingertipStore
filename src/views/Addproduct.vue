@@ -100,7 +100,7 @@
         </dl>
         <span v-on:click="cancelweight(k)">X</span>
       </div>-->
-      <div class="prodetail">
+      <!-- <div class="prodetail">
         <b>请对商品进行选择</b>
         <br>
         <div
@@ -115,18 +115,60 @@
             <option :value="i2" v-for="(i2,k2) in i.pro.params" v-bind:key="k2">{{i2}}</option>
           </select>
         </div>
+        <p class="type">
+          <span v-for="(i,k) in pro" :key="k" v-on:click="handlechangesheet(i,k)">{{i.group}}</span>
+        </p>
       </div>
-      <h3 v-on:click="addsku">+添加SKU</h3>
+      <h3 v-on:click="addsku">+添加SKU</h3>-->
+
+      <!-- <button
+        style="width:150px;height:50px;font-size:20px;margin-left:20px"
+        v-on:click="addsure"
+      >确定</button>
+      <Skutable :array="tabledata" :pro="pro" :tabledata="tabledata"></Skutable>-->
+      <div class="option">
+        <p style="text-align:center;margin-bottom:50px">销售属性</p>
+        <div class="option_con">
+          <ul class="item" v-for="(i,k) in pro" :key="k">
+            <div class="group">{{i.group}}</div>
+            <li v-for="(v,m) in i.params" :key="m">
+              <Checkbox v-model="v.flag"></Checkbox>
+              <span>{{v.type}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="btn">
+          <span @click="createsku">生成sku</span>
+          <span>保存</span>
+        </div>
+      </div>
+      <Table :sku="pro" :arr="skuarr"></Table>
     </section>
     <footer v-on:click="applysale">申请上架</footer>
+    <Skusheet :flag="skuvisible" :actionsheet="actionsheet" @close="close"></Skusheet>
   </div>
 </template>
 <script>
 import formData from "../utils/formdata";
+import Skusheet from "../components/skusheet/Skusheet";
+import Skutable from "../components/skusheet/skutable";
+import Table from "../components/sku/skutable";
+import Checkbox from "../components/checkbox/checkbox";
 export default {
   name: "addproduct",
+  components: {
+    Skusheet,
+    Skutable,
+    Table,
+    Checkbox
+  },
   data() {
     return {
+      skuarr: [],
+      arr: [],
+      idx: "",
+      tabledata: [],
+      skuvisible: false,
       imgUrl: [],
       listlen: [],
       shopcarimg: "", //cart_image
@@ -148,7 +190,8 @@ export default {
       cat_id: "",
       market_price: "",
       cost_price: "",
-      code_bar: ""
+      code_bar: "",
+      actionsheet: []
     };
   },
   created() {
@@ -182,7 +225,16 @@ export default {
           if (data.code === 1) {
             let sku = JSON.parse(data.sku);
             this.pro = sku;
-            // console.log(this.pro);
+            this.pro = this.pro.map(item => {
+              item.params = item.params.map(i => {
+                i = {
+                  type: i,
+                  flag: false
+                };
+                return i;
+              });
+              return item;
+            });
           }
           // console.log(data);
         })
@@ -283,7 +335,7 @@ export default {
             detail: this.detail,
             cat_id: this.cat_id,
             cart_image: this.shopcarimg,
-            sku: JSON.stringify(this.addskupro),
+            sku: JSON.stringify(this.skuarr),
             market_price: this.market_price,
             cost_price: this.cost_price,
             code_bar: this.code_bar
@@ -304,6 +356,61 @@ export default {
     },
     addplatpro() {
       this.$router.push(`/addplatformpro${window.location.search}`);
+    },
+    handlechangesheet(i, idx) {
+      this.skuvisible = true;
+      this.actionsheet = i.params;
+      this.idx = idx;
+    },
+    close(d) {
+      this.skuvisible = false;
+      if (d) {
+        this.arr[this.idx] = d;
+      }
+    },
+    addsure() {
+      for (let i = 0; i < this.arr.length; i++) {
+        if (!this.arr[i]) {
+          this.$message("请填写完整信息");
+          return;
+        }
+      }
+      if (this.arr.length < this.pro.length) {
+        this.$message("请填写完整信息");
+        return;
+      }
+
+      this.tabledata.push(this.arr);
+      this.arr = [];
+    },
+    createsku() {
+      let arr = [];
+      this.pro.map((item, index) => {
+        arr[index] = [];
+        item.params.map((i, v) => {
+          if (i.flag) {
+            arr[index].push(i.type);
+          }
+        });
+      });
+      this.skuarr = [];
+      this.skuarr = descartes(arr);
+      function descartes(array) {
+        if (array.length < 2) return array[0] || [];
+        return [].reduce.call(array, function(col, set) {
+          var res = [];
+          col.forEach(function(c) {
+            set.forEach(function(s) {
+              var t = [].concat(Array.isArray(c) ? c : [c]);
+              t.push(s);
+              res.push(t);
+            });
+          });
+          return res;
+        });
+      }
+
+      // console.log(this.skuarr);
     }
   }
 };
@@ -345,6 +452,44 @@ export default {
     font-size: pxTorem(16px);
     overflow-y: auto;
     padding-bottom: pxTorem(10px);
+    .option {
+      width: 90%;
+
+      box-shadow: 0 0 pxTorem(10px) #ccc;
+      padding: pxTorem(10px);
+      margin: pxTorem(20px) auto;
+      .btn {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        span {
+          background: green;
+          color: #fff;
+          border-radius: pxTorem(10px);
+          padding: pxTorem(5px) pxTorem(20px);
+        }
+      }
+      .item {
+        width: 100%;
+        display: flex;
+        margin-bottom: pxTorem(20px);
+        flex-wrap: wrap;
+        div.group {
+          margin-right: pxTorem(20px);
+          position: relative;
+          top: pxTorem(-8px);
+        }
+        li {
+          margin-right: pxTorem(10px);
+          display: flex;
+          span {
+            margin-left: pxTorem(6px);
+            position: relative;
+            top: pxTorem(-8px);
+          }
+        }
+      }
+    }
     textarea {
       width: 100%;
       font-size: pxTorem(20px);
@@ -380,7 +525,7 @@ export default {
       }
     }
     h3 {
-      margin-left: 40%;
+      margin-left: 30%;
       display: inline-block;
       padding: pxTorem(5px) pxTorem(10px);
       background: #5adad0;
@@ -395,6 +540,10 @@ export default {
       border-radius: pxTorem(5px);
       position: relative;
       padding: pxTorem(6px);
+      .type {
+        display: flex;
+        justify-content: space-between;
+      }
       > b {
         line-height: pxTorem(35px);
       }
@@ -427,6 +576,7 @@ export default {
         font-size: pxTorem(12px);
         border-radius: pxTorem(6px);
       }
+
       .weight {
         display: flex;
         justify-content: space-around;

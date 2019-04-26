@@ -2,7 +2,7 @@
  * @Author: mikey.zhang 店铺列表
  * @Date: 2019-04-12 13:27:27 
  * @Last Modified by: mikey.zhang
- * @Last Modified time: 2019-04-21 13:53:39
+ * @Last Modified time: 2019-04-22 21:54:23
  */
 
 <template>
@@ -48,7 +48,7 @@ export default {
   },
   created() {
     this.$http
-      .get("/store/storelist")
+      .get("/buyer/storelist")
       .then(data => {
         // console.log(data);
         if (data.code === 1) {
